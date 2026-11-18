@@ -38,7 +38,7 @@ if (!allowedHosts) {
 const fromEnv = writeConfigFromEnv(path.dirname(dbPath));
 if (fromEnv.length) console.log(`Configuración desde variables de entorno: ${fromEnv.join(', ')}`);
 // Enlaces de los correos (fase 13): url_app de data/correo.json, APP_URL o, en local, http://localhost:<puerto>.
-const appUrl = process.env.APP_URL?.replace(//+$/, '') || `http://localhost:${port}`;
+const appUrl = process.env.APP_URL?.replace(/\/+$/, '') || `http://localhost:${port}`;
 const app = createApp({
   dbPath,
   appUrl,
