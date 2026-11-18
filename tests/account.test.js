@@ -578,6 +578,16 @@ test('npm run seguridad: estado, quitar la verificación en dos pasos y cerrar s
 
   assert.throws(() => run('--email=nadie@test.local'), /No existe una cuenta/);
   assert.throws(() => run('--probar-correo=yo@test.local'), /modo local/);
+
+  // Confirmar un correo a mano (la cuenta del dueño de la app, sin enlace).
+  const sin = await registerUser(srv.baseUrl, { verified: false });
+  assert.equal((await sin.c.get('/api/auth/me')).data.user.emailVerified, false);
+  out = run(`--email=${sin.user.email}`, '--confirmar-correo');
+  assert.match(out, /confirmado por el administrador/);
+  assert.equal((await sin.c.get('/api/auth/me')).data.user.emailVerified, true);
+  assert.match(run(`--email=${sin.user.email}`, '--confirmar-correo'), /ya estaba confirmado/);
+  const ev = (await sin.c.get('/api/account/security')).data.events.find((e) => e.type === 'correo_confirmado');
+  assert.match(ev.detail, /por el administrador/);
 });
 
 test('eliminar la cuenta borra enlaces, códigos de respaldo, correos anteriores y actividad', async () => {

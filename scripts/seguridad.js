@@ -2,11 +2,13 @@
 //   npm run seguridad -- --email=ana@correo.com                    → estado: correo, verificación en dos pasos, sesiones y actividad
 //   npm run seguridad -- --email=ana@correo.com --quitar-2fa       → quita la verificación en dos pasos y cierra sus sesiones
 //   npm run seguridad -- --email=ana@correo.com --cerrar-sesiones  → cierra todas sus sesiones abiertas
+//   npm run seguridad -- --email=ana@correo.com --confirmar-correo → da su correo por confirmado (sin enlace)
 //   npm run seguridad -- --probar-correo=tu@correo.com             → envía un correo de prueba (comprueba data/correo.json)
 //   Opciones: --db=ruta/app.db (o la variable DB_PATH). Se puede usar con el servidor en marcha.
 //
 // ANTES de quitar la verificación en dos pasos, comprueba que quien lo pide es la persona: por ejemplo, que te
 // escribió desde el correo de la cuenta y sabe datos que solo ella conoce (sus últimos movimientos, su NIT…).
+// Lo mismo antes de confirmar un correo a mano: úsalo solo con cuentas que sabes que son de quien dice (p. ej. la tuya).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -87,6 +89,16 @@ try {
     });
     console.log(`Verificación en dos pasos quitada a ${user.email} y sesiones cerradas. Ya puede entrar solo con su contraseña y volver a activarla.`);
     await notify('2fa_quitado_admin');
+  } else if (args['confirmar-correo']) {
+    if (user.email_verified_at) {
+      console.log(`El correo de ${user.email} ya estaba confirmado (${fmt(user.email_verified_at)}).`);
+    } else {
+      transaction(db, () => {
+        db.prepare('UPDATE users SET email_verified_at = ? WHERE id = ?').run(now.toISOString(), user.id);
+        logSecurityEvent(db, user.id, 'correo_confirmado', { ip: 'administrador', userAgent: 'npm run seguridad', detail: `${user.email} (por el administrador)`, now });
+      });
+      console.log(`Correo de ${user.email} confirmado por el administrador: ya no tiene que confirmarlo.`);
+    }
   } else if (args['cerrar-sesiones']) {
     const n = transaction(db, () => {
       const r = db.prepare('DELETE FROM sessions WHERE user_id = ?').run(user.id);
