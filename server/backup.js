@@ -65,14 +65,27 @@ export function pruneBackups(dir, keep) {
   return toRemove.map((b) => b.name);
 }
 
+/** Nombre de una copia hecha en `now` (cuentaclara-AAAAMMDD-HHMMSS-mmm.db, en UTC). */
+export const backupFileName = (now = new Date()) => `cuentaclara-${stamp(now)}.db`;
+
+/** Escribe en `file` una copia coherente de la base de datos y la verifica. Devuelve el nº de filas por tabla. */
+export function writeVerifiedCopy(db, file) {
+  fs.rmSync(file, { force: true });
+  try {
+    db.prepare('VACUUM INTO ?').run(file);
+    return verifyBackup(file);
+  } catch (err) {
+    fs.rmSync(file, { force: true });
+    throw err;
+  }
+}
+
 export function createBackup(db, dir, { keep = 14, now = new Date() } = {}) {
   fs.mkdirSync(dir, { recursive: true });
-  const file = path.join(dir, `cuentaclara-${stamp(now)}.db`);
+  const file = path.join(dir, backupFileName(now));
   const tmp = `${file}.tmp`;
-  fs.rmSync(tmp, { force: true });
   try {
-    db.prepare('VACUUM INTO ?').run(tmp);
-    const counts = verifyBackup(tmp);
+    const counts = writeVerifiedCopy(db, tmp);
     fs.renameSync(tmp, file);
     const removed = pruneBackups(dir, keep);
     return { file, counts, removed };

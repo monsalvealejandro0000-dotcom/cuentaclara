@@ -21,7 +21,8 @@
     "pagos": "node scripts/pagos.js",
     "pqr": "node scripts/pqr.js",
     "consentimientos": "node scripts/consentimientos.js",
-    "seguridad": "node scripts/seguridad.js"
+    "seguridad": "node scripts/seguridad.js",
+    "copia-servidor": "node scripts/descargar-copia.js"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

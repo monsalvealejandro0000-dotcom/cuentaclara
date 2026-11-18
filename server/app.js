@@ -25,6 +25,7 @@ import { registerPaymentRoutes } from './routes/payments.js';
 import { registerLegalRoutes } from './routes/legal.js';
 import { registerPqrRoutes } from './routes/pqr.js';
 import { registerAccountRoutes } from './routes/account.js';
+import { registerBackupRoutes } from './routes/backup.js';
 import { createMailer } from './mail.js';
 import { paymentConfigLoader } from './payments.js';
 import { todayLocal } from './calc.js';
@@ -105,6 +106,7 @@ const ROUTE_MODULES = [
   registerLegalRoutes,
   registerPqrRoutes,
   registerAccountRoutes,
+  registerBackupRoutes,
 ];
 
 function sendJson(res, status, data) {
@@ -179,6 +181,7 @@ function checkOrigin(req) {
  * `mailConfigPath`: datos de Brevo para enviar correos (fase 13); por defecto, data/correo.json. Sin él, modo local.
  * `appUrl`: dirección de la app para los enlaces de los correos si correo.json no trae `url_app`.
  * `mailTransport`: solo para las pruebas: recibe cada correo en lugar de enviarlo.
+ * `backupToken`: clave para descargar copias de seguridad (GET /api/admin/copia). Sin ella, la descarga no existe.
  */
 export function createApp({
   dbPath,
@@ -195,6 +198,7 @@ export function createApp({
   mailConfigPath = path.join(path.dirname(path.resolve(dbPath ?? '.')), 'correo.json'),
   appUrl = 'http://localhost:3000',
   mailTransport = null,
+  backupToken = null,
 } = {}) {
   if (!dbPath) throw new Error('createApp: dbPath es obligatorio');
   const db = openDb(dbPath);
@@ -220,6 +224,7 @@ export function createApp({
     clientIp: (req) => clientIp(req, trustProxy),
     logger,
     mail,
+    backupToken,
   };
   for (const register of ROUTE_MODULES) register(router, ctx);
   const root = path.resolve(publicDir);

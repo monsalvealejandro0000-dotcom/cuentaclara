@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { createApp } from './app.js';
 import { scheduleBackups } from './backup.js';
 import { writeConfigFromEnv } from './config-env.js';
+import { backupTokenDigest, MIN_BACKUP_TOKEN_LENGTH } from './routes/backup.js';
 import { LOOPBACK_HOSTS, parseAllowedHosts } from './security.js';
 
 const APP_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -45,6 +46,7 @@ const app = createApp({
   secureCookies: process.env.COOKIE_SECURE === '1',
   trustProxy: process.env.TRUST_PROXY === '1',
   allowedHosts,
+  backupToken: process.env.BACKUP_DOWNLOAD_TOKEN || null,
 });
 const backups = scheduleBackups(app.db, {
   dir: backupDir,
@@ -56,6 +58,9 @@ app.server.listen(port, host, () => {
   console.log(`CuentaClara escuchando en http://${host === '0.0.0.0' ? 'localhost' : host}:${port}`);
   console.log(`Base de datos: ${dbPath}`);
   console.log(`Copias de seguridad: ${backupDir}`);
+  const token = process.env.BACKUP_DOWNLOAD_TOKEN;
+  if (backupTokenDigest(token)) console.log('Descarga de copias (npm run copia-servidor): activada');
+  else if (token) console.warn(`[copias] BACKUP_DOWNLOAD_TOKEN es muy corta (mínimo ${MIN_BACKUP_TOKEN_LENGTH} caracteres): la descarga de copias queda desactivada.`);
   if (app.mail.mode() === 'brevo') console.log(`Correo: Brevo. Enlaces con ${app.mail.baseUrl()}`);
   else console.log('Correo: modo local (sin data/correo.json). Los correos NO se envían: su enlace aparece en esta ventana.');
   if (!loopback && app.mail.baseUrl().includes('localhost')) {

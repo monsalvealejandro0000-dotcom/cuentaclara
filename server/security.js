@@ -71,6 +71,8 @@ export const DEFAULT_LIMITS = {
   // Códigos de verificación en dos pasos incorrectos, por cuenta: 5 cada 15 minutos y 20 al día.
   twoFactor: { max: 5, windowMs: 15 * 60 * 1000 },
   twoFactorDay: { max: 20, windowMs: 24 * 60 * 60 * 1000 },
+  // Descargas de la copia de seguridad (con la clave del administrador) por IP, acierten o no.
+  backupDownload: { max: 10, windowMs: 60 * 60 * 1000 },
 };
 
 export function createLimiters(overrides = {}) {
