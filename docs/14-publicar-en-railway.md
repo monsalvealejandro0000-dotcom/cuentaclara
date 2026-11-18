@@ -31,15 +31,27 @@
 
 ## Comandos del administrador en el servidor
 
-En Railway → servicio `cuentaclara` → pestaña **Console** se abre una terminal dentro del servidor. Ahí funcionan los mismos comandos que en tu computador, por ejemplo:
+En Railway → servicio `cuentaclara` → pestaña **Console** se abre una terminal dentro del servidor. Ahí `npm` y `node` no están en el PATH: primero escribe esta línea (una vez por sesión de la consola):
 
 ```bash
-npm run pagos
+export PATH=/mise/installs/node/26.13.0/bin:$PATH
+```
+
+Después funcionan los scripts, siempre con `--db=/data/app.db`, por ejemplo:
+
+```bash
+node scripts/pagos.js --db=/data/app.db
 ```
 
 ```bash
-npm run plan -- --email=correo@ejemplo.com --plan=pro
+node scripts/plan.js --db=/data/app.db --email=correo@ejemplo.com --plan=pro
 ```
+
+```bash
+node scripts/seguridad.js --db=/data/app.db --email=correo@ejemplo.com --confirmar-correo
+```
+
+Si Railway actualiza Node, cambia `26.13.0` por la versión que muestre `ls /mise/installs/node`.
 
 ## Copias en tu computador (gratis)
 
