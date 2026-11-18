@@ -1,0 +1,7 @@
+{
+  "servicio": "brevo",
+  "clave_api": "PEGA-AQUI-TU-CLAVE-DE-API-DE-BREVO",
+  "remitente_nombre": "CuentaClara",
+  "remitente_correo": "no-responder@TU-DOMINIO.co",
+  "url_app": "https://TU-DOMINIO.co"
+}

@@ -1,0 +1,127 @@
+<template>
+  <style>
+    @font-face { font-family: 'Geist'; src: url('assets/fonts/geist.woff2') format('woff2'); font-weight: 100 900; font-style: normal; }
+    @font-face { font-family: 'Geist Mono'; src: url('assets/fonts/geist-mono.woff2') format('woff2'); font-weight: 100 900; font-style: normal; }
+    #root { position: absolute; inset: 0; font-family: 'Geist', sans-serif; color: #f4f4f5; }
+    #ev-stage { position: absolute; inset: 0; }
+    #ev-move { position: absolute; inset: 0; }
+    #ev-title { position: absolute; left: 240px; top: 118px; font-size: 64px; font-weight: 700; letter-spacing: -0.04em; }
+    #ev-title span { display: inline-block; margin-right: 0.22em; }
+    #ev-title .accent { color: #3bf08c; }
+    /* Formulario «Nuevo evento» (como el diálogo de la app). */
+    #ev-dialog { position: absolute; left: 240px; top: 260px; width: 680px; height: 620px; border-radius: 28px; background: #111113; border: 1px solid #27272a; box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.9); }
+    #ev-dialog .hd { position: absolute; left: 32px; top: 28px; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+    #ev-dialog .x { position: absolute; right: 30px; top: 30px; width: 30px; height: 30px; color: #8a8a93; }
+    #ev-dialog .sep { position: absolute; left: 0; right: 0; top: 92px; height: 1px; background: #27272a; }
+    .lbl { position: absolute; font-size: 19px; font-weight: 500; color: #d4d4d8; }
+    .box { position: absolute; height: 60px; border-radius: 14px; border: 1px solid #3f3f46; background: #0c0c0e; font-size: 23px; display: flex; align-items: center; padding: 0 18px; }
+    #ev-name { left: 32px; top: 150px; width: 616px; overflow: hidden; }
+    #ev-name-text { white-space: nowrap; }
+    #ev-date { left: 32px; top: 266px; width: 296px; font-family: 'Geist Mono', monospace; }
+    #ev-allday { position: absolute; left: 360px; top: 281px; display: flex; align-items: center; gap: 14px; font-size: 22px; }
+    #ev-switch { position: relative; width: 56px; height: 32px; border-radius: 16px; background: #3f3f46; }
+    #ev-switch-on { position: absolute; inset: 0; border-radius: 16px; background: #3bf08c; }
+    #ev-knob { position: absolute; left: 4px; top: 4px; width: 24px; height: 24px; border-radius: 50%; background: #ffffff; }
+    #ev-cat { left: 32px; top: 382px; width: 616px; }
+    .opt { position: absolute; left: 18px; top: 0; height: 60px; display: flex; align-items: center; gap: 12px; }
+    .opt i { width: 12px; height: 12px; border-radius: 50%; }
+    #ev-cat-a i { background: #6a5cff; }
+    #ev-cat-b i { background: #ffb800; }
+    .chev { position: absolute; right: 18px; top: 19px; width: 22px; height: 22px; color: #8a8a93; }
+    .btn { position: absolute; top: 500px; height: 56px; border-radius: 14px; display: grid; place-items: center; font-size: 21px; font-weight: 600; }
+    #ev-cancel { left: 300px; width: 150px; border: 1px solid #3f3f46; color: #e4e4e7; }
+    #ev-save { left: 466px; width: 182px; background: #f4f4f5; color: #09090a; }
+    /* Semana del 16 al 22 de noviembre. */
+    #ev-week { position: absolute; left: 1040px; top: 420px; width: 640px; height: 240px; border-radius: 28px; background: #111113; border: 1px solid #27272a; }
+    #ev-week .hd { position: absolute; left: 34px; top: 24px; font-size: 22px; font-weight: 600; color: #d4d4d8; }
+    #ev-days { position: absolute; left: 34px; top: 74px; display: grid; grid-template-columns: repeat(7, 80px); gap: 2px; }
+    .wd { position: relative; height: 142px; border-radius: 12px; background: #18181b; border: 1px solid #222226; padding: 8px 8px 0; }
+    .wd b { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; color: #8a8a93; }
+    .wd span { font-family: 'Geist Mono', monospace; font-size: 20px; color: #d4d4d8; }
+    #ev-d19-ring { position: absolute; inset: -1px; border-radius: 12px; border: 2px solid #ffb800; }
+    #ev-chip { position: absolute; left: 6px; right: 6px; bottom: 8px; border-radius: 8px; padding: 5px 6px; background: #ffb800; color: #09090a; font-size: 13px; font-weight: 700; line-height: 1.15; }
+    #ev-fly { position: absolute; left: 727px; top: 768px; width: 140px; height: 40px; border-radius: 10px; background: #ffb800; color: #09090a; font-size: 16px; font-weight: 700; display: grid; place-items: center; }
+    #ev-cursor { position: absolute; left: 0; top: 0; width: 46px; height: 46px; opacity: 0; }
+    /* Estados que aparecen después (empiezan ocultos). */
+    #ev-d19-ring, #ev-chip, #ev-switch-on, #ev-cat-b, #ev-fly { opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="evento" data-width="1920" data-height="1080">
+    <div id="ev-stage" class="clip" data-start="0" data-duration="6">
+      <div id="ev-move">
+        <h2 id="ev-title"><span>Crea</span><span>un</span><span>evento</span><span>en</span><span class="accent">segundos</span></h2>
+        <div id="ev-dialog">
+          <div class="hd">Nuevo evento</div>
+          <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          <div class="sep"></div>
+          <div class="lbl" style="left: 32px; top: 120px">Título</div>
+          <div id="ev-name" class="box"><span id="ev-name-text">Declarar IVA septiembre–octubre 2026</span></div>
+          <div class="lbl" style="left: 32px; top: 236px">Fecha</div>
+          <div id="ev-date" class="box"><span id="ev-date-text">19/11/2026</span></div>
+          <div id="ev-allday"><div id="ev-switch"><div id="ev-switch-on"></div><div id="ev-knob"></div></div>Todo el día</div>
+          <div class="lbl" style="left: 32px; top: 352px">Categoría</div>
+          <div id="ev-cat" class="box">
+            <div id="ev-cat-a" class="opt"><i></i>Reunión</div>
+            <div id="ev-cat-b" class="opt"><i></i>Fiscal / impuestos</div>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>
+          </div>
+          <div id="ev-cancel" class="btn">Cancelar</div>
+          <div id="ev-save" class="btn">Guardar</div>
+        </div>
+        <div id="ev-week">
+          <div class="hd">Noviembre 2026 · semana del 16</div>
+          <div id="ev-days">
+            <div class="wd"><b>LUN</b><span>16</span></div>
+            <div class="wd"><b>MAR</b><span>17</span></div>
+            <div class="wd"><b>MIÉ</b><span>18</span></div>
+            <div class="wd" id="ev-d19"><b>JUE</b><span>19</span><div id="ev-d19-ring"></div><div id="ev-chip">Declarar IVA</div></div>
+            <div class="wd"><b>VIE</b><span>20</span></div>
+            <div class="wd"><b>SÁB</b><span>21</span></div>
+            <div class="wd"><b>DOM</b><span>22</span></div>
+          </div>
+        </div>
+        <div id="ev-fly" data-layout-allow-overlap>Declarar IVA</div>
+        <svg id="ev-cursor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2.5 L4 19 L8.6 14.9 L11.6 21.5 L14.4 20.3 L11.4 13.8 L17.6 13.8 Z" fill="#ffffff" stroke="#09090a" stroke-width="1.4" stroke-linejoin="round" /></svg>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Llega desde el día 19 del calendario: el formulario entra desenfocado y se asienta.
+    tl.fromTo('#ev-dialog', { opacity: 0, scale: 1.08, filter: 'blur(12px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.5, ease: 'expo.out', transformOrigin: '50% 50%' }, 0);
+    tl.fromTo('#ev-title span', { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'power2.out', stagger: 0.07 }, 0.15);
+    tl.fromTo('#ev-week', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, 0.3);
+    // Se escribe el título del evento (letra a letra) y aparece la fecha.
+    tl.fromTo('#ev-name-text', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1.25, ease: 'steps(36)' }, 0.6);
+    tl.fromTo('#ev-date-text', { opacity: 0 }, { opacity: 1, duration: 0.15, ease: 'power2.out' }, 1.95);
+    // Cursor: activa «Todo el día», elige la categoría y guarda.
+    tl.fromTo('#ev-cursor', { x: 760, y: 980, opacity: 0 }, { x: 760, y: 980, opacity: 1, duration: 0.15 }, 1.8);
+    tl.to('#ev-cursor', { x: 616, y: 548, duration: 0.45, ease: 'power3.inOut' }, 1.95);
+    tl.to('#ev-cursor', { scale: 0.86, duration: 0.07, ease: 'power2.in', transformOrigin: '10% 6%' }, 2.42);
+    tl.to('#ev-cursor', { scale: 1, duration: 0.12, ease: 'power2.out' }, 2.49);
+    tl.to('#ev-knob', { x: 24, duration: 0.22, ease: 'power3.out' }, 2.47);
+    tl.to('#ev-switch-on', { opacity: 1, duration: 0.18, ease: 'power2.out' }, 2.47);
+    tl.to('#ev-cursor', { x: 560, y: 664, duration: 0.42, ease: 'power3.inOut' }, 2.75);
+    tl.to('#ev-cursor', { scale: 0.86, duration: 0.07, ease: 'power2.in' }, 3.2);
+    tl.to('#ev-cursor', { scale: 1, duration: 0.12, ease: 'power2.out' }, 3.27);
+    tl.to('#ev-cat-a', { opacity: 0, filter: 'blur(6px)', duration: 0.13, ease: 'power3.in' }, 3.25);
+    tl.to('#ev-cat-b', { opacity: 1, duration: 0.01 }, 3.38);
+    tl.fromTo('#ev-cat-b', { filter: 'blur(6px)' }, { filter: 'blur(0px)', duration: 0.13, ease: 'power2.out' }, 3.38);
+    tl.to('#ev-cursor', { x: 790, y: 780, duration: 0.45, ease: 'power3.inOut' }, 3.6);
+    tl.to('#ev-cursor', { scale: 0.86, duration: 0.07, ease: 'power2.in' }, 4.08);
+    tl.to('#ev-cursor', { scale: 1, duration: 0.12, ease: 'power2.out' }, 4.15);
+    tl.to('#ev-save', { scale: 0.95, duration: 0.07, ease: 'power2.in', transformOrigin: '50% 50%' }, 4.08);
+    tl.to('#ev-save', { scale: 1, duration: 0.12, ease: 'power2.out' }, 4.15);
+    // Guardar: el formulario se recoge y el evento vuela al jueves 19.
+    tl.to('#ev-dialog', { opacity: 0, scale: 0.6, filter: 'blur(10px)', duration: 0.4, ease: 'power3.in', transformOrigin: '80% 85%' }, 4.25);
+    tl.to('#ev-cursor', { opacity: 0, duration: 0.2 }, 4.25);
+    tl.fromTo('#ev-fly', { opacity: 0, x: 0, y: 0, scale: 1 }, { opacity: 1, duration: 0.1 }, 4.25);
+    tl.to('#ev-fly', { x: 563, y: -180, scale: 0.55, duration: 0.5, ease: 'power3.inOut' }, 4.32);
+    tl.to('#ev-fly', { opacity: 0, duration: 0.08 }, 4.8);
+    tl.to('#ev-chip', { opacity: 1, duration: 0.01 }, 4.8);
+    tl.fromTo('#ev-chip', { scale: 0.85, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.3, ease: 'expo.out' }, 4.8);
+    tl.to('#ev-d19-ring', { opacity: 1, duration: 0.2, ease: 'power2.out' }, 4.8);
+    // Salida en barrido hacia la izquierda (la siguiente pantalla entra por la derecha).
+    tl.to('#ev-move', { x: -160, opacity: 0, filter: 'blur(12px)', duration: 0.3, ease: 'power3.in' }, 5.62);
+    window.__timelines['evento'] = tl;
+  </script>
+</template>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      /* CuentaClara · «Programación de tareas» — motion graphic de 30 s (guion: ../docs/guion-motion-tareas.md). */
+      :root {
+        --ground: #09090a;
+        --ink: #f4f4f5;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+        background: var(--ground);
+      }
+      /* Fondo de puntos de la app (fijo, sin animación). */
+      #bg {
+        position: absolute;
+        inset: 0;
+        background-color: var(--ground);
+        background-image: radial-gradient(rgba(244, 244, 245, 0.07) 1.2px, transparent 1.3px);
+        background-size: 26px 26px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1920" data-height="1080">
+      <div id="bg" class="clip" data-start="0" data-duration="30" data-track-index="0" data-layout-ignore></div>
+
+      <div id="intro" data-composition-id="intro" data-composition-src="compositions/intro.html" data-start="0" data-duration="3.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="calendario" data-composition-id="calendario" data-composition-src="compositions/calendario.html" data-start="3.5" data-duration="5.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="evento" data-composition-id="evento" data-composition-src="compositions/evento.html" data-start="9" data-duration="6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="aviso" data-composition-id="aviso" data-composition-src="compositions/aviso.html" data-start="15" data-duration="11.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="cierre" data-composition-id="cierre" data-composition-src="compositions/cierre.html" data-start="26.5" data-duration="3.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+
+      <!-- Locución (voz local Kokoro «em_alex»): cada frase entra cuando aparece en pantalla lo que nombra. -->
+      <audio id="voz-1" class="clip" src="assets/voice/voz-1.wav" data-start="0.3" data-duration="2.94" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-2" class="clip" src="assets/voice/voz-2.wav" data-start="3.7" data-duration="3.46" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-3" class="clip" src="assets/voice/voz-3.wav" data-start="9.2" data-duration="3.69" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-4" class="clip" src="assets/voice/voz-4.wav" data-start="15.3" data-duration="3.03" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-5" class="clip" src="assets/voice/voz-5.wav" data-start="18.4" data-duration="2.58" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-6" class="clip" src="assets/voice/voz-6.wav" data-start="21.4" data-duration="3.48" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-7" class="clip" src="assets/voice/voz-7.wav" data-start="26.7" data-duration="3.18" data-track-index="2" data-volume="1"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

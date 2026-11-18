@@ -1,0 +1,182 @@
+<template>
+  <style>
+    @font-face { font-family: 'Geist'; src: url('assets/fonts/geist.woff2') format('woff2'); font-weight: 100 900; font-style: normal; }
+    @font-face { font-family: 'Geist Mono'; src: url('assets/fonts/geist-mono.woff2') format('woff2'); font-weight: 100 900; font-style: normal; }
+    #root { position: absolute; inset: 0; font-family: 'Geist', sans-serif; color: #f4f4f5; }
+    #av-stage { position: absolute; inset: 0; }
+    #av-all { position: absolute; inset: 0; }
+    .av-head { position: absolute; left: 240px; top: 104px; font-size: 60px; font-weight: 700; letter-spacing: -0.04em; white-space: nowrap; }
+    .av-head span { display: inline-block; margin-right: 0.22em; }
+    .av-head .accent { color: #3bf08c; }
+    #av-app { position: absolute; left: 240px; top: 220px; width: 1440px; height: 740px; border-radius: 28px; background: #0e0e10; border: 1px solid #27272a; box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.9); }
+    #av-app .t { position: absolute; left: 48px; top: 40px; font-size: 40px; font-weight: 700; letter-spacing: -0.035em; }
+    #av-app .s { position: absolute; left: 48px; top: 96px; font-size: 21px; color: #a1a1aa; }
+    /* Aviso de declaración (tarjeta amarilla del Dashboard). */
+    #av-rem { position: absolute; left: 288px; top: 370px; width: 1344px; height: 150px; }
+    #av-rem-card { position: absolute; inset: 0; border-radius: 22px; border: 1px solid rgba(255, 184, 0, 0.45); background: rgba(255, 184, 0, 0.1); }
+    #av-rem-body { position: absolute; inset: 0; }
+    #av-bell { position: absolute; left: 30px; top: 30px; width: 36px; height: 36px; color: #a1a1aa; }
+    .l1 { position: absolute; left: 84px; top: 28px; font-size: 27px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+    #av-l2 { position: absolute; left: 84px; top: 76px; font-size: 21px; color: #a1a1aa; }
+    #av-l2 .mono { font-family: 'Geist Mono', monospace; color: #d4d4d8; }
+    #av-pro { position: absolute; left: 84px; top: 112px; display: flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(139, 61, 255, 0.4); background: rgba(139, 61, 255, 0.14); font-size: 14px; font-weight: 600; }
+    #av-pro i { width: 6px; height: 6px; border-radius: 50%; background: #8b3dff; }
+    .rbtn { position: absolute; top: 80px; height: 52px; border-radius: 14px; border: 1px solid #3f3f46; background: #111113; display: grid; place-items: center; font-size: 20px; font-weight: 500; }
+    #av-btn-a { left: 900px; width: 240px; }
+    #av-btn-b { left: 1152px; width: 168px; }
+    .lab { position: absolute; inset: 0; display: grid; place-items: center; white-space: nowrap; }
+    #av-check { position: absolute; left: 632px; top: 35px; width: 80px; height: 80px; }
+    /* Próximas declaraciones. */
+    #av-list { position: absolute; left: 288px; top: 550px; width: 1344px; height: 380px; border-radius: 22px; background: #111113; border: 1px solid #27272a; }
+    #av-list .hd { position: absolute; left: 32px; top: 26px; font-size: 24px; font-weight: 600; letter-spacing: -0.02em; }
+    .row { position: absolute; left: 32px; right: 32px; height: 80px; border-top: 1px solid #222226; }
+    .row .a { position: absolute; left: 0; top: 14px; font-size: 22px; font-weight: 500; }
+    .row .b { position: absolute; left: 0; top: 46px; font-size: 18px; color: #a1a1aa; white-space: nowrap; }
+    .badge { position: absolute; right: 0; top: 24px; display: flex; align-items: center; gap: 8px; padding: 4px 14px; border-radius: 999px; font-size: 16px; font-weight: 600; white-space: nowrap; }
+    .badge i { width: 8px; height: 8px; border-radius: 50%; }
+    .b-warn { border: 1px solid rgba(255, 184, 0, 0.45); background: rgba(255, 184, 0, 0.14); }
+    .b-warn i { background: #ffb800; }
+    .b-ok { border: 1px solid rgba(59, 240, 140, 0.4); background: rgba(59, 240, 140, 0.14); }
+    .b-ok i { background: #3bf08c; }
+    .b-neutral { border: 1px solid #3f3f46; background: #18181b; color: #a1a1aa; }
+    .b-neutral i { background: #8a8a93; }
+    #av-row1-ok-tint { position: absolute; left: -16px; right: -16px; top: 4px; bottom: 4px; border-radius: 14px; background: rgba(59, 240, 140, 0.07); }
+    /* Diálogo «Día exacto de la declaración». */
+    #av-dlg { position: absolute; left: 1080px; top: 530px; width: 552px; height: 220px; border-radius: 22px; background: #111113; border: 1px solid #3f3f46; box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9); }
+    #av-dlg .hd { position: absolute; left: 28px; top: 24px; font-size: 22px; font-weight: 600; }
+    #av-dlg .lb { position: absolute; left: 28px; top: 62px; font-size: 16px; color: #a1a1aa; }
+    #av-dlg-date { position: absolute; left: 28px; top: 90px; width: 300px; height: 56px; border-radius: 14px; border: 1px solid #3f3f46; background: #0c0c0e; display: flex; align-items: center; padding: 0 16px; font-family: 'Geist Mono', monospace; font-size: 22px; }
+    #av-dlg-save { position: absolute; left: 344px; top: 90px; width: 180px; height: 56px; border-radius: 14px; background: #f4f4f5; color: #09090a; display: grid; place-items: center; font-size: 20px; font-weight: 600; }
+    #av-dlg .hint { position: absolute; left: 28px; top: 162px; right: 28px; font-size: 15px; color: #8a8a93; }
+    #av-cursor { position: absolute; left: 0; top: 0; width: 46px; height: 46px; }
+    /* Estados que aparecen después (empiezan ocultos). */
+    #av-head-b, #av-l1-b, #av-a-b, #av-row1-b2, #av-row1-ok, #av-row1-ok-tint, #av-check, #av-dlg, #av-cursor { opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="aviso" data-width="1920" data-height="1080">
+    <div id="av-stage" class="clip" data-start="0" data-duration="11.5">
+      <div id="av-all">
+        <h2 id="av-head-a" class="av-head"><span>CuentaClara</span><span>te</span><span class="accent">avisa</span><span>antes</span><span>de</span><span>cada</span><span>declaración</span></h2>
+        <h2 id="av-head-b" class="av-head"><span>Marca</span><span class="accent">lo</span><span class="accent">hecho</span><span>y</span><span>sigue</span><span>con</span><span>tu</span><span>día</span></h2>
+
+        <div id="av-app">
+          <div class="t">Dashboard</div>
+          <div class="s">Así va tu actividad.</div>
+        </div>
+
+        <div id="av-rem">
+          <div id="av-rem-card"></div>
+          <div id="av-rem-body">
+            <svg id="av-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /><path d="M4 2C2.8 3.7 2 5.7 2 8" /><path d="M22 8c0-2.3-.8-4.3-2-6" /></svg>
+            <div id="av-l1-a" class="l1">Declaras el IVA de septiembre–octubre 2026 en noviembre de 2026</div>
+            <div id="av-l1-b" class="l1">Declaras el IVA el 19 de noviembre de 2026 · faltan 3 días</div>
+            <div id="av-l2">Estimado a pagar: <span class="mono">$ <span id="av-amount">0</span></span></div>
+            <div id="av-pro"><i></i>Pro</div>
+            <div id="av-btn-a" class="rbtn"><span id="av-a-a" class="lab">Anotar el día exacto</span><span id="av-a-b" class="lab">Cambiar el día</span></div>
+            <div id="av-btn-b" class="rbtn"><span class="lab">Ya la presenté</span></div>
+          </div>
+          <svg id="av-check" viewBox="0 0 80 80" aria-hidden="true">
+            <circle id="av-check-ring" cx="40" cy="40" r="36" fill="none" stroke="#3bf08c" stroke-width="5" />
+            <path id="av-check-tick" d="M24 41l11 11 22-24" fill="none" stroke="#3bf08c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+
+        <div id="av-list">
+          <div class="hd">Próximas declaraciones</div>
+          <div id="av-row1" class="row" style="top: 84px">
+            <div id="av-row1-ok-tint"></div>
+            <div class="a">IVA de septiembre–octubre 2026</div>
+            <div id="av-row1-b1" class="b">Se declara en noviembre de 2026</div>
+            <div id="av-row1-b2" class="b">Se declara en noviembre de 2026 · Día anotado: 19 de noviembre de 2026</div>
+            <div id="av-row1-warn" class="badge b-warn"><i></i>Avisando</div>
+            <div id="av-row1-ok" class="badge b-ok"><i></i>Presentada</div>
+          </div>
+          <div class="row" style="top: 174px">
+            <div class="a">IVA de noviembre–diciembre 2026</div>
+            <div class="b">Se declara en enero de 2027</div>
+            <div class="badge b-neutral"><i></i>Pendiente</div>
+          </div>
+          <div class="row" style="top: 264px">
+            <div class="a">Renta 2026</div>
+            <div class="b">Se declara entre agosto y octubre de 2027</div>
+            <div class="badge b-neutral"><i></i>Pendiente</div>
+          </div>
+        </div>
+
+        <div id="av-dlg" data-layout-allow-occlusion>
+          <div class="hd">Día exacto de la declaración</div>
+          <div class="lb">Día</div>
+          <div id="av-dlg-date"><span id="av-dlg-date-text">19/11/2026</span></div>
+          <div id="av-dlg-save">Guardar</div>
+          <div class="hint">Se guarda como evento en tu Calendario.</div>
+        </div>
+
+        <svg id="av-cursor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2.5 L4 19 L8.6 14.9 L11.6 21.5 L14.4 20.3 L11.4 13.8 L17.6 13.8 Z" fill="#ffffff" stroke="#09090a" stroke-width="1.4" stroke-linejoin="round" /></svg>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const click = (sel, at) => {
+      tl.to(sel, { scale: 0.86, duration: 0.07, ease: 'power2.in', transformOrigin: '17% 10%' }, at);
+      tl.to(sel, { scale: 1, duration: 0.12, ease: 'power2.out' }, at + 0.07);
+    };
+    const press = (sel, at) => {
+      tl.to(sel, { scale: 0.95, duration: 0.07, ease: 'power2.in', transformOrigin: '50% 50%' }, at);
+      tl.to(sel, { scale: 1, duration: 0.12, ease: 'power2.out' }, at + 0.07);
+    };
+
+    // Entra por la derecha (la escena anterior salió por la izquierda).
+    tl.fromTo('#av-app, #av-rem, #av-list', { x: 160, opacity: 0, filter: 'blur(12px)' }, { x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.55, ease: 'expo.out', stagger: 0.06 }, 0);
+    tl.fromTo('#av-head-a span', { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'power2.out', stagger: 0.07 }, 0.3);
+    // El estimado llega como un número que cuenta.
+    const amount = { v: 0 };
+    tl.fromTo(amount, { v: 0 }, {
+      v: 794200, duration: 0.8, ease: 'expo.out',
+      onUpdate: () => { document.querySelector('#av-amount').textContent = Math.round(amount.v / 100) * 100 === 0 ? '0' : (Math.round(amount.v / 100) * 100).toLocaleString('es-CO'); },
+    }, 0.5);
+
+    // «Anotar el día exacto» → diálogo → 19/11/2026 → Guardar.
+    tl.fromTo('#av-cursor', { x: 1720, y: 1000, opacity: 0 }, { x: 1720, y: 1000, opacity: 1, duration: 0.15 }, 1.95);
+    tl.to('#av-cursor', { x: 1300, y: 471, duration: 0.5, ease: 'power3.inOut' }, 2.1);
+    click('#av-cursor', 2.65);
+    press('#av-btn-a', 2.65);
+    tl.fromTo('#av-dlg', { opacity: 0, scale: 0.96, y: 10 }, { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: 'expo.out', transformOrigin: '30% 0%' }, 2.82);
+    tl.fromTo('#av-dlg-date-text', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.45, ease: 'steps(10)' }, 3.1);
+    tl.to('#av-cursor', { x: 1506, y: 623, duration: 0.45, ease: 'power3.inOut' }, 3.5);
+    click('#av-cursor', 4.0);
+    press('#av-dlg-save', 4.0);
+    tl.to('#av-dlg', { opacity: 0, scale: 0.97, duration: 0.18, ease: 'power3.in' }, 4.15);
+    // El aviso cambia: ya tiene el día exacto.
+    tl.to('#av-l1-a', { opacity: 0, filter: 'blur(8px)', duration: 0.15, ease: 'power3.in' }, 4.3);
+    tl.fromTo('#av-l1-b', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.18, ease: 'power2.out' }, 4.45);
+    tl.to('#av-a-a', { opacity: 0, duration: 0.12 }, 4.3);
+    tl.to('#av-a-b', { opacity: 1, duration: 0.15 }, 4.42);
+    tl.to('#av-row1-b1', { opacity: 0, duration: 0.15 }, 4.5);
+    tl.to('#av-row1-b2', { opacity: 1, duration: 0.2 }, 4.62);
+
+    // Segundo titular.
+    tl.to('#av-head-a span', { opacity: 0, filter: 'blur(6px)', duration: 0.13, ease: 'power3.in', stagger: 0.03 }, 6.35);
+    tl.to('#av-head-b', { opacity: 1, duration: 0.01 }, 6.62);
+    tl.fromTo('#av-head-b span', { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'power2.out', stagger: 0.07 }, 6.62);
+
+    // «Ya la presenté»: check verde, el aviso se cierra y la declaración queda «Presentada».
+    tl.to('#av-cursor', { x: 1516, y: 471, duration: 0.5, ease: 'power3.inOut' }, 7.2);
+    click('#av-cursor', 7.75);
+    press('#av-btn-b', 7.75);
+    tl.to('#av-cursor', { opacity: 0, duration: 0.2 }, 7.95);
+    tl.to('#av-rem-body', { opacity: 0.12, filter: 'blur(4px)', duration: 0.2, ease: 'power2.out' }, 7.9);
+    tl.to('#av-check', { opacity: 1, duration: 0.01 }, 7.92);
+    tl.fromTo('#av-check-ring', { strokeDasharray: 227, strokeDashoffset: 227 }, { strokeDashoffset: 0, duration: 0.35, ease: 'power2.out' }, 7.92);
+    tl.fromTo('#av-check-tick', { strokeDasharray: 60, strokeDashoffset: 60 }, { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, 8.12);
+    tl.to('#av-rem', { opacity: 0, scale: 0.97, filter: 'blur(6px)', duration: 0.3, ease: 'power3.in', transformOrigin: '50% 50%' }, 8.75);
+    tl.to('#av-list', { y: -180, duration: 0.55, ease: 'power3.inOut' }, 8.9);
+    tl.to('#av-row1-warn', { opacity: 0, duration: 0.12 }, 9.3);
+    tl.to('#av-row1-ok', { opacity: 1, duration: 0.01 }, 9.4);
+    tl.fromTo('#av-row1-ok', { scale: 0.8, transformOrigin: '100% 50%' }, { scale: 1, duration: 0.35, ease: 'expo.out' }, 9.4);
+    tl.to('#av-row1-ok-tint', { opacity: 1, duration: 0.3, ease: 'power2.out' }, 9.4);
+
+    // Salida: desenfoque y fundido sobre el mismo fondo.
+    tl.to('#av-all', { opacity: 0, filter: 'blur(10px)', duration: 0.25, ease: 'power3.in' }, 11.2);
+    window.__timelines['aviso'] = tl;
+  </script>
+</template>

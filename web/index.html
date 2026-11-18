@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Ingresos, gastos, beneficio mensual e impuestos para independientes en Colombia" />
+    <meta name="theme-color" content="#0b0b0c" />
+    <title>CuentaClara</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!--
+      Aviso para quien abre este archivo con doble clic (file://): sin el servidor no carga la app.
+      Con el servidor, index.css lo oculta y React lo sustituye al arrancar.
+      El servidor permite estos estilos en línea con su huella en la CSP (server/app.js).
+    -->
+    <style>
+      .cc-sin-servidor{position:fixed;inset:0;overflow:auto;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(rgb(11 11 12/.07) 1px,transparent 1px) 0 0/18px 18px #f5f5f3;color:#0b0b0c;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;animation:cc-aparece .3s .4s both}
+      .cc-sin-servidor section{box-sizing:border-box;width:100%;max-width:32rem;background:#fff;border:1px solid rgb(11 11 12/.09);border-radius:28px;padding:28px}
+      .cc-sin-servidor h1{font-size:22px;line-height:1.25;letter-spacing:-.01em;margin:0 0 8px}
+      .cc-sin-servidor p,.cc-sin-servidor ol{margin:0 0 16px}
+      .cc-sin-servidor ol{padding-left:1.25rem}
+      .cc-sin-servidor li+li{margin-top:8px}
+      .cc-marca{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin:0 0 20px!important}
+      .cc-marca::before{content:"";width:10px;height:10px;border-radius:50%;background:#12b863}
+      .cc-suave{color:#66666c}
+      .cc-boton{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:#0b0b0c;color:#fff;font-weight:500;text-decoration:none}
+      .cc-boton:focus-visible{outline:2px solid #3c2cff;outline-offset:3px}
+      .cc-nota{font-size:13px;margin:12px 0 0!important}
+      @keyframes cc-aparece{from{opacity:0}}
+      @media (prefers-color-scheme:dark){
+        .cc-sin-servidor{background:radial-gradient(rgb(255 255 255/.07) 1px,transparent 1px) 0 0/18px 18px #09090a;color:#f4f4f5}
+        .cc-sin-servidor section{background:#111113;border-color:rgb(255 255 255/.1)}
+        .cc-suave{color:#a1a1aa}
+        .cc-boton{background:#f4f4f5;color:#0b0b0c}
+        .cc-boton:focus-visible{outline-color:#6a5cff}
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"><div class="cc-sin-servidor">
+      <section aria-labelledby="cc-titulo">
+        <p class="cc-marca">CuentaClara</p>
+        <h1 id="cc-titulo">Así no se abre la app</h1>
+        <p class="cc-suave">Este archivo es solo el molde de la interfaz. La app la carga su servidor, que también guarda tus datos; sin él, la página no puede mostrar nada.</p>
+        <p>Para abrirla:</p>
+        <ol>
+          <li>En la carpeta <b>GASTOS INGRESOS</b>, haz doble clic en <b>Abrir CuentaClara</b>.</li>
+          <li>El navegador se abrirá solo en la app. Deja abierta la ventana negra mientras la uses: al cerrarla, la app se apaga.</li>
+        </ol>
+        <a class="cc-boton" href="http://localhost:3000">Ya está en marcha: ir a la app</a>
+        <p class="cc-nota cc-suave">Si el botón no carga la app, el servidor no está en marcha: usa el paso 1.</p>
+      </section>
+    </div></div>
+    <noscript>CuentaClara necesita JavaScript activado.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

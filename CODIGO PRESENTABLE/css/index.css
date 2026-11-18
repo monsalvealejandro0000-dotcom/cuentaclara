@@ -1,0 +1,218 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Paleta de toda la app = la del AnalyticsBento:
+ *  superficies neutras (tarjeta blanca / #111113), bordes translúcidos, fondo de puntos,
+ *  verde #12b863 / #3BF08C, índigo #3c2cff / #6a5cff, cian #22D3EE, ámbar #FFB800,
+ *  naranja #FF5A1F, rosa #FF3DA5, violeta #8B3DFF y lima #7CFF5B.
+ *  Las variantes "-ink" son las mismas familias oscurecidas/aclaradas para texto legible.
+ */
+:root {
+  --radius: 0.875rem;
+  --background: #f5f5f3;
+  --foreground: #0b0b0c;
+  --card: #ffffff;
+  --card-foreground: #0b0b0c;
+  --popover: #ffffff;
+  --popover-foreground: #0b0b0c;
+  --primary: #0b0b0c;
+  --primary-foreground: #ffffff;
+  --secondary: #efefed;
+  --secondary-foreground: #0b0b0c;
+  --muted: #efefed;
+  --muted-foreground: #66666c;
+  --accent: #efefed;
+  --accent-foreground: #0b0b0c;
+  --destructive: #c2410c;
+  --destructive-foreground: #ffffff;
+  --border: rgb(11 11 12 / 0.09);
+  --input: rgb(11 11 12 / 0.16);
+  --ring: #3c2cff;
+
+  --brand: #3c2cff;
+  --positive: #12b863;
+  --positive-ink: #0a7a43;
+  --negative: #ff5a1f;
+  --negative-ink: #c2410c;
+  --warning: #ffb800;
+  --warning-ink: #8a5a00;
+  --violet: #8b3dff;
+  --lime: #7cff5b;
+  --cyan: #22d3ee;
+  --pink: #ff3da5;
+  --dot: rgb(11 11 12 / 0.07);
+}
+
+.dark {
+  --background: #09090a;
+  --foreground: #f4f4f5;
+  --card: #111113;
+  --card-foreground: #f4f4f5;
+  --popover: #111113;
+  --popover-foreground: #f4f4f5;
+  --primary: #f4f4f5;
+  --primary-foreground: #0b0b0c;
+  --secondary: #1c1c1f;
+  --secondary-foreground: #f4f4f5;
+  --muted: #1c1c1f;
+  --muted-foreground: #a1a1aa;
+  --accent: #1c1c1f;
+  --accent-foreground: #f4f4f5;
+  --destructive: #ff6a33;
+  --destructive-foreground: #0b0b0c;
+  --border: rgb(255 255 255 / 0.1);
+  --input: rgb(255 255 255 / 0.16);
+  --ring: #6a5cff;
+
+  --brand: #6a5cff;
+  --positive: #3bf08c;
+  --positive-ink: #3bf08c;
+  --negative: #ff6a33;
+  --negative-ink: #ff8a5c;
+  --warning: #ffb800;
+  --warning-ink: #ffc93d;
+  --dot: rgb(255 255 255 / 0.07);
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-brand: var(--brand);
+  --color-positive: var(--positive);
+  --color-positive-ink: var(--positive-ink);
+  --color-negative: var(--negative);
+  --color-negative-ink: var(--negative-ink);
+  --color-warning: var(--warning);
+  --color-warning-ink: var(--warning-ink);
+  --color-violet: var(--violet);
+  --color-lime: var(--lime);
+  --color-cyan: var(--cyan);
+  --color-pink: var(--pink);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: 18px;
+  --radius-3xl: 28px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    background-image: radial-gradient(circle, var(--dot) 0 1px, transparent 1.4px);
+    background-size: 20px 13px;
+    background-position: -6px -1px;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* evita el zoom automático en iPhone */
+  }
+  @media (min-width: 768px) {
+    input,
+    select,
+    textarea {
+      font-size: 14px;
+    }
+  }
+  dialog::backdrop {
+    background: rgb(9 9 10 / 0.55);
+    backdrop-filter: blur(2px);
+  }
+}
+
+.tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* ---- AnalyticsBento: variables de color (antes en un <style> en línea, bloqueado por la CSP) ---- */
+.ab-root {
+  --ab-radar: #12b863;
+  --ab-rev-a: #12b863;
+  --ab-rev-b: #12b863;
+}
+.dark .ab-root {
+  --ab-radar: #3bf08c;
+  --ab-rev-a: #22d3ee;
+  --ab-rev-b: #3bf08c;
+}
+
+/* ---- Insignia "by vasnev.art" del componente original ---- */
+.vb-badge{--vb-bg:#fff;--vb-line:rgba(0,0,0,.08);--vb-fg:#0b0b0c;--vb-mut:rgba(0,0,0,.45);--vb-off:rgba(0,0,0,.14);--vb-on:#3c2cff;
+  display:inline-flex;align-items:center;gap:9px;height:34px;padding:0 12px 0 11px;border-radius:17px;background:var(--vb-bg);border:1px solid var(--vb-line);
+  color:var(--vb-fg);text-decoration:none;font:500 13px/1 "Geist Variable",ui-sans-serif,system-ui,-apple-system,sans-serif;letter-spacing:-.02em;
+  box-shadow:0 8px 24px -14px rgba(0,0,0,.25);transition:border-color .25s,transform .25s cubic-bezier(.2,.9,.25,1)}
+.dark .vb-badge{--vb-bg:#111113;--vb-line:rgba(255,255,255,.1);--vb-fg:#fff;--vb-mut:rgba(255,255,255,.5);--vb-off:rgba(255,255,255,.16);--vb-on:#6a5cff;
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 8px 24px -12px rgba(0,0,0,.6)}
+.vb-badge:hover{border-color:color-mix(in oklab,var(--vb-on) 45%,transparent)}
+.vb-badge:active{transform:scale(.97)}
+.vb-badge:focus-visible{outline:2px solid var(--vb-on);outline-offset:2px}
+.vb-mark{display:grid;grid-template-columns:repeat(5,3px);grid-template-rows:repeat(3,3px);gap:2px}
+.vb-mark i{width:3px;height:3px;border-radius:50%;background:var(--vb-off);transition:background .3s}
+.vb-mark i.on{background:var(--vb-on)}
+.vb-badge:hover .vb-mark i.on{animation:vb-wave .9s cubic-bezier(.3,1.4,.4,1) calc(var(--x)*60ms) 1}
+.vb-badge:hover .vb-mark i:not(.on){background:color-mix(in oklab,var(--vb-on) 22%,transparent)}
+@keyframes vb-wave{0%,100%{transform:none}40%{transform:translateY(-2px) scale(1.35)}}
+.vb-by{color:var(--vb-mut)}
+.vb-arr{height:12px;width:0;margin-left:-9px;opacity:0;color:var(--vb-mut);transform:translate(-4px,4px);transition:width .3s cubic-bezier(.2,.9,.25,1),opacity .25s,transform .3s cubic-bezier(.2,.9,.25,1),margin .3s}
+.vb-badge:hover .vb-arr{width:12px;margin-left:0;opacity:1;transform:none;color:var(--vb-fg)}
+@media (prefers-reduced-motion: reduce){.vb-badge:hover .vb-mark i.on{animation:none}}
+
+/* ---- Aviso de index.html para quien lo abre sin servidor: con la app cargada no se ve nunca ---- */
+.cc-sin-servidor {
+  display: none !important;
+}
+
+/* ---- Impresión de facturas ---- */
+@media print {
+  body {
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-area {
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}

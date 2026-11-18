@@ -1,0 +1,47 @@
+<template>
+  <style>
+    @font-face { font-family: 'Geist'; src: url('assets/fonts/geist.woff2') format('woff2'); font-weight: 100 900; font-style: normal; }
+    #root { position: absolute; inset: 0; font-family: 'Geist', sans-serif; color: #f4f4f5; }
+    #intro-stage { position: absolute; inset: 0; }
+    #intro-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #intro-brand { display: flex; align-items: center; gap: 26px; margin-bottom: 72px; }
+    #intro-mark { width: 112px; height: 112px; }
+    #intro-word { display: flex; font-size: 60px; font-weight: 600; letter-spacing: -0.03em; }
+    #intro-word span { display: inline-block; }
+    #intro-title { display: flex; gap: 0.24em; font-size: 108px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+    #intro-title span { display: inline-block; }
+    #intro-sub { margin-top: 30px; font-size: 42px; font-weight: 400; color: #a1a1aa; letter-spacing: -0.02em; }
+    #intro-sub b { color: #3bf08c; font-weight: 600; }
+  </style>
+  <div id="root" data-composition-id="intro" data-width="1920" data-height="1080">
+    <div id="intro-stage" class="clip" data-start="0" data-duration="3.5">
+      <div id="intro-inner">
+        <div id="intro-brand">
+          <!-- Logo de CuentaClara (el mismo de la app). -->
+          <svg id="intro-mark" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="9" fill="#f4f4f5" />
+            <path id="intro-line" d="M8 21c3-1 4-8 8-8s4 5 8-4" fill="none" stroke="#12b863" stroke-width="2.6" stroke-linecap="round" />
+            <circle id="intro-dot" cx="24" cy="9" r="2.4" fill="#12b863" />
+          </svg>
+          <div id="intro-word"><span>C</span><span>u</span><span>e</span><span>n</span><span>t</span><span>a</span><span>C</span><span>l</span><span>a</span><span>r</span><span>a</span></div>
+        </div>
+        <h1 id="intro-title"><span>Programa</span><span>tus</span><span>tareas</span></h1>
+        <p id="intro-sub">Que no se te pase <b>ninguna</b></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Marca: el cuadro llega, la línea verde se dibuja y el punto aparece.
+    tl.fromTo('#intro-mark', { opacity: 0, scale: 0.82 }, { opacity: 1, scale: 1, duration: 0.55, ease: 'expo.out', transformOrigin: '50% 50%' }, 0.05);
+    tl.fromTo('#intro-line', { strokeDasharray: 40, strokeDashoffset: 40 }, { strokeDashoffset: 0, duration: 0.6, ease: 'power2.out' }, 0.2);
+    tl.fromTo('#intro-dot', { scale: 0, transformOrigin: '24px 9px' }, { scale: 1, duration: 0.3, ease: 'expo.out' }, 0.7);
+    tl.fromTo('#intro-word span', { opacity: 0.25, filter: 'blur(3px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.18, ease: 'power2.out', stagger: 0.035 }, 0.25);
+    // Título palabra por palabra (desenfoque → nítido), sin desplazamiento.
+    tl.fromTo('#intro-title span', { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'power2.out', stagger: 0.067 }, 0.6);
+    tl.fromTo('#intro-sub', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power2.out' }, 0.9);
+    // Salida: desenfoque y fundido (el fondo no corta).
+    tl.to('#intro-inner', { opacity: 0, filter: 'blur(8px)', duration: 0.2, ease: 'power3.in' }, 3.28);
+    window.__timelines['intro'] = tl;
+  </script>
+</template>

@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "skills": {
+    "hyperframes": {
+      "source": "heygen-com/hyperframes",
+      "commit": "e21f56dcad6d2afe8a650b53b41df396959c07f5",
+      "sourceType": "github",
+      "skillPath": "skills/hyperframes/SKILL.md",
+      "computedHash": "aaba3bb08a1370e3c466e15e7ae5d4110ce8a38584a72338db3bbc620a84182a"
+    },
+    "hyperframes-cli": {
+      "source": "heygen-com/hyperframes",
+      "commit": "e21f56dcad6d2afe8a650b53b41df396959c07f5",
+      "sourceType": "github",
+      "skillPath": "skills/hyperframes-cli/SKILL.md",
+      "computedHash": "0d5cb5b56c945477e6762ce0a1f0165b81d27182ea2b4c8ff49458572634fb3e"
+    },
+    "hyperframes-registry": {
+      "source": "heygen-com/hyperframes",
+      "commit": "e21f56dcad6d2afe8a650b53b41df396959c07f5",
+      "sourceType": "github",
+      "skillPath": "skills/hyperframes-registry/SKILL.md",
+      "computedHash": "a3c816f09a2ff43bc1502983a68c3fb4e2bb40c6b70dc065d4c11bd91cfa8740"
+    },
+    "media-use": {
+      "source": "heygen-com/hyperframes",
+      "commit": "e21f56dcad6d2afe8a650b53b41df396959c07f5",
+      "sourceType": "github",
+      "skillPath": "skills/media-use/SKILL.md",
+      "computedHash": "4124c4754691549c6bbcfbd795350033c006d6991cb575c67905f31b71ca3ff0"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "cuentaclara",
+  "version": "2.0.0",
+  "private": true,
+  "description": "CuentaClara: ingresos, gastos, beneficio mensual e impuestos para autónomos",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/licencias.js",
+    "start": "node server/index.js",
+    "abrir": "node scripts/abrir.js",
+    "typecheck": "tsc --noEmit",
+    "pretest": "npm run build",
+    "test": "node --test --test-reporter=spec",
+    "backup": "node scripts/backup.js",
+    "restore": "node scripts/restore.js",
+    "plan": "node scripts/plan.js",
+    "pagos": "node scripts/pagos.js",
+    "pqr": "node scripts/pqr.js",
+    "consentimientos": "node scripts/consentimientos.js",
+    "seguridad": "node scripts/seguridad.js"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.70.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
+  }
+}

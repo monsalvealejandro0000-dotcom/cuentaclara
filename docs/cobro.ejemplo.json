@@ -1,0 +1,7 @@
+{
+  "metodos": [
+    { "nombre": "Nequi", "detalle": "Número: 3XX XXX XXXX · a nombre de: TU NOMBRE" },
+    { "nombre": "Transferencia bancaria", "detalle": "Banco: TU BANCO · Cuenta de ahorros: XXXXXXXXXX · a nombre de: TU NOMBRE · C.C. o NIT: XXXXXXXXXX" }
+  ],
+  "contacto": "¿Dudas con tu pago? Escríbenos a TU CORREO"
+}

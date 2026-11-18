@@ -1,0 +1,40 @@
+<template>
+  <style>
+    @font-face { font-family: 'Geist'; src: url('assets/fonts/geist.woff2') format('woff2'); font-weight: 100 900; font-style: normal; }
+    #root { position: absolute; inset: 0; font-family: 'Geist', sans-serif; color: #f4f4f5; }
+    #ci-stage { position: absolute; inset: 0; }
+    #ci-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #ci-brand { display: flex; align-items: center; gap: 22px; }
+    #ci-mark { width: 92px; height: 92px; }
+    #ci-word { font-size: 52px; font-weight: 600; letter-spacing: -0.03em; }
+    #ci-line { margin-top: 64px; display: flex; gap: 0.24em; font-size: 76px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+    #ci-line span { display: inline-block; }
+    #ci-line .accent { color: #3bf08c; }
+    #ci-small { margin-top: 40px; font-size: 30px; color: #a1a1aa; letter-spacing: -0.01em; }
+  </style>
+  <div id="root" data-composition-id="cierre" data-width="1920" data-height="1080">
+    <div id="ci-stage" class="clip" data-start="0" data-duration="3.5">
+      <div id="ci-inner">
+        <div id="ci-brand">
+          <svg id="ci-mark" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="9" fill="#f4f4f5" />
+            <path id="ci-path" d="M8 21c3-1 4-8 8-8s4 5 8-4" fill="none" stroke="#12b863" stroke-width="2.6" stroke-linecap="round" />
+            <circle cx="24" cy="9" r="2.4" fill="#12b863" />
+          </svg>
+          <div id="ci-word">CuentaClara</div>
+        </div>
+        <p id="ci-line"><span>Tus</span><span>cuentas</span><span>claras,</span><span>tus</span><span>tareas</span><span class="accent">a</span><span class="accent">tiempo</span></p>
+        <p id="ci-small">Calendario · Avisos de declaración · Informe para el contador</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo('#ci-brand', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power2.out' }, 0.05);
+    tl.fromTo('#ci-path', { strokeDasharray: 40, strokeDashoffset: 40 }, { strokeDashoffset: 0, duration: 0.5, ease: 'power2.out' }, 0.12);
+    // Frase final de gris a tinta, palabra por palabra; luego queda quieta hasta el final (más de 2 s).
+    tl.fromTo('#ci-line span', { opacity: 0.18 }, { opacity: 1, duration: 0.1, ease: 'power1.out', stagger: 0.08 }, 0.3);
+    tl.fromTo('#ci-small', { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power2.out' }, 0.6);
+    window.__timelines['cierre'] = tl;
+  </script>
+</template>

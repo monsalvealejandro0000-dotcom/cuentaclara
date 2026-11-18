@@ -1,0 +1,5 @@
+{
+  "_nota": "Usuarios de PRUEBA para las comprobaciones manuales/E2E en el navegador. Solo existen en data/e2e-pruebas.db, que se borra al terminar. No son datos reales.",
+  "usuarioA": { "name": "Usuario E2E A", "email": "e2e-a@cuentaclara.test", "password": "PruebaE2E-2026a" },
+  "usuarioB": { "name": "Usuario E2E B", "email": "e2e-b@cuentaclara.test", "password": "PruebaE2E-2026b" }
+}
