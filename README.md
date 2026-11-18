@@ -159,6 +159,8 @@ npm run typecheck
 | 10. Plan Contador: panel de clientes en solo lectura | [docs/10-plan-contador.md](docs/10-plan-contador.md) |
 | 11. Cobro manual de los planes | [docs/11-cobro-manual.md](docs/11-cobro-manual.md) |
 | 12. Seguridad, documentos legales y cumplimiento en Colombia | [docs/12-legal-y-seguridad.md](docs/12-legal-y-seguridad.md) |
+| 13. Verificar el correo, recuperar la contraseña y segundo factor | [docs/13-correo-y-segundo-factor.md](docs/13-correo-y-segundo-factor.md) |
+| 14. Publicada en internet (Railway) | [docs/14-publicar-en-railway.md](docs/14-publicar-en-railway.md) |
 
 > Las fases 1 a 5 describen la primera versión de la interfaz (`public/`, HTML/JS). Las funciones y pantallas son las mismas; desde la fase 6 la interfaz está en `web/src`.
 
