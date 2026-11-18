@@ -14,6 +14,7 @@ import { useConfirm } from '@/components/confirm';
 import { Field, FormError } from '@/components/common';
 import { dayLabel } from '@/components/plan';
 import { ConsentCheckbox } from '@/components/legal';
+import { VerifyEmailFirst } from '@/components/security';
 
 /* ------------------------------------------------------------------ */
 /*  Configuración → «Mi contador» (fase 10, plan Contador).            */
@@ -60,7 +61,7 @@ function Shortcut() {
 }
 
 export function AccountantCard() {
-  const { legal } = useSession();
+  const { legal, user } = useSession();
   const toast = useToast();
   const confirm = useConfirm();
   const { data, error, loading, reload } = useLoad(() => api<{ link: AccountantLink | null }>('/accountant'), []);
@@ -163,6 +164,9 @@ export function AccountantCard() {
             </Button>
           </div>
         </Inset>
+      ) : !user?.emailVerified ? (
+        // Fase 13: hace falta el correo confirmado para invitar (es por donde te avisamos de cambios en tu cuenta).
+        <VerifyEmailFirst>Confirma tu correo para invitar a tu contador. Es por donde te avisamos si algo cambia en tu cuenta.</VerifyEmailFirst>
       ) : (
         <form noValidate onSubmit={invite} className="mt-4 grid gap-4">
           {link?.status === 'rechazado' && (

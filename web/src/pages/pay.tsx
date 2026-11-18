@@ -15,6 +15,7 @@ import { useToast } from '@/components/ui/toast';
 import { Field, FormError, Loading, PageHeader, useFocusFirstError } from '@/components/common';
 import { dayLabel, PAYMENT_NOTE } from '@/components/plan';
 import { LegalConsentFields, legalVersions, type LegalAccept } from '@/components/legal';
+import { VerifyEmailFirst } from '@/components/security';
 
 /* ------------------------------------------------------------------ */
 /*  Pagar plan (#/planes/pagar?plan=pro|contador), fase 11.            */
@@ -28,7 +29,7 @@ const pesosText = (cents: number) => pesos(cents / 100);
 const amountInput = (cents: number) => (cents / 100).toLocaleString('es-CO', { maximumFractionDigits: 0 });
 
 export function PayPage({ query }: { query: URLSearchParams }) {
-  const { plan } = useAuthed();
+  const { plan, user } = useAuthed();
   const tier: PaidTier = query.get('plan') === 'contador' ? 'contador' : 'pro';
   const { config, loading } = usePaymentConfig();
   const { data: payments, loading: loadingPayments } = usePayments();
@@ -69,6 +70,18 @@ export function PayPage({ query }: { query: URLSearchParams }) {
       <ButtonLink variant="outline" href="#/configuracion">
         Ver estado
       </ButtonLink>,
+    );
+  }
+  // Fase 13: para avisar un pago hace falta un correo confirmado (por ahí le escribimos sobre su compra).
+  if (!user.emailVerified) {
+    return (
+      <>
+        {header}
+        <Card className="max-w-2xl">
+          <CardTitle>Confirma tu correo para avisar un pago</CardTitle>
+          <VerifyEmailFirst>Lo necesitamos para escribirte sobre tu compra: cuándo se activa tu plan o si hay que devolverte el dinero.</VerifyEmailFirst>
+        </Card>
+      </>
     );
   }
   return (
@@ -284,7 +297,7 @@ function copyWithSelection(text: string) {
   return ok;
 }
 
-function CopyButton({ text, what }: { text: string; what: string }) {
+export function CopyButton({ text, what }: { text: string; what: string }) {
   const toast = useToast();
   const [done, setDone] = React.useState(false);
   async function copy() {

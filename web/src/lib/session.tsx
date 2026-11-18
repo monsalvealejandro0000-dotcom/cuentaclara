@@ -20,7 +20,12 @@ type Session = {
 
 type SessionApi = Session & {
   signIn: (user: User, consentPending?: LegalDocKey[]) => Promise<void>;
-  signOut: () => void;
+  /** Cierra la sesión en el navegador y va a `to` (por defecto, Iniciar sesión; null = no cambia de pantalla). */
+  signOut: (to?: string | null) => void;
+  /** Fase 13: datos de la cuenta que cambian sin volver a entrar (correo confirmado, verificación en dos pasos). */
+  setUser: (user: User) => void;
+  /** Vuelve a pedir la cuenta al servidor (p. ej. al volver a la pestaña tras confirmar el correo en el celular). */
+  refreshUser: () => Promise<void>;
   /** Tras aceptar las versiones vigentes: carga los datos y entra a la app. */
   consentAccepted: () => Promise<void>;
   setSettings: (s: Settings) => void;
@@ -109,11 +114,21 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         setSession((s) => ({ ...s, status: 'ready', user, ...data, consentPending: [] }));
         navigate('/dashboard');
       },
-      signOut: () => {
+      signOut: (to = '/login') => {
         userRef.current = null;
         setCurrency('COP');
         setSession((s) => ({ ...s, ...SIGNED_OUT }));
-        navigate('/login');
+        if (to) navigate(to);
+      },
+      setUser: (user) => setSession((s) => (s.user ? { ...s, user } : s)),
+      refreshUser: async () => {
+        if (!userRef.current) return;
+        try {
+          const me = await api<Me>('/auth/me');
+          setSession((s) => (s.user ? { ...s, user: me.user } : s));
+        } catch {
+          /* sin conexión: se queda lo conocido */
+        }
       },
       consentAccepted: async () => {
         const data = await loadUserData();

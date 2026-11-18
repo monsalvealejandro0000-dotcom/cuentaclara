@@ -44,9 +44,11 @@ if (args['probar-correo'] !== undefined) {
   const to = String(args['probar-correo']).trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) fail('Indica un correo: --probar-correo=tu@correo.com');
   if (mail.mode() === 'local') {
-    console.log(`No hay ${path.join(dataDir, 'correo.json')} válido: la app está en modo local y no envía correos.`);
-    console.log('Copia docs/correo.ejemplo.json a data/correo.json y pon tus datos de Brevo (docs/13-correo-y-segundo-factor.md).');
-    process.exit(1);
+    fail(
+      `No hay un ${path.join(dataDir, 'correo.json')} válido: la app está en modo local y no envía correos.
+` +
+        'Copia docs/correo.ejemplo.json a data/correo.json y pon tus datos de Brevo (docs/13-correo-y-segundo-factor.md).',
+    );
   }
   try {
     await mail.sendNow(to, 'prueba');

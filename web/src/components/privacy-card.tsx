@@ -19,7 +19,7 @@ const PURPOSE: Record<ConsentRecord['purpose'], string> = {
 };
 
 /** Navegador legible a partir del user agent («Chrome en Windows»). Solo para mostrarlo: se guarda completo. */
-function browserName(ua: string) {
+export function browserName(ua: string) {
   const b = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : null;
   const os = /Windows/.test(ua) ? 'Windows' : /Android/.test(ua) ? 'Android' : /iPhone|iPad/.test(ua) ? 'iOS' : /Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : null;
   return b ? `${b}${os ? ` en ${os}` : ''}` : ua || 'desconocido';

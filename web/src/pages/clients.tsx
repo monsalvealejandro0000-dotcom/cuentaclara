@@ -21,6 +21,7 @@ import { MovementsPage } from '@/pages/movements';
 import { InvoiceDetailPage, InvoicesPage } from '@/pages/invoices';
 import { ReportPage } from '@/pages/report';
 import { cn } from '@/lib/utils';
+import { VerifyEmailFirst } from '@/components/security';
 
 /* ------------------------------------------------------------------ */
 /*  Plan Contador (fase 10, docs/10-plan-contador.md)                  */
@@ -89,6 +90,14 @@ export function ClientsPage() {
         <ErrorState error={error} onRetry={reload} />
       ) : data ? (
         <div className="grid gap-4">
+          {data.invitationsHidden && (
+            <Card>
+              <CardTitle>Invitaciones de tus clientes</CardTitle>
+              <VerifyEmailFirst>
+                Confirma tu correo para ver las invitaciones de tus clientes. Así nadie puede hacerse pasar por ti registrándose con tu correo.
+              </VerifyEmailFirst>
+            </Card>
+          )}
           {data.invitations.length > 0 && (
             <Card>
               <CardTitle>Invitaciones pendientes</CardTitle>

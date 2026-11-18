@@ -19,6 +19,7 @@ import { setCurrency } from '@/lib/format';
 import { LegalPage } from '@/pages/legal';
 import { ConsentGate } from '@/pages/consent-gate';
 import { PqrPage } from '@/pages/pqr';
+import { ConfirmEmailPage, ForgotPasswordPage, ResetPasswordPage } from '@/pages/account-links';
 import type { LegalDocKey } from '@/lib/types';
 
 /**
@@ -29,6 +30,10 @@ type Route = { re: RegExp; title: string; public?: boolean; open?: boolean; rend
 const ROUTES: Route[] = [
   { re: /^\/login\/?$/, title: 'Iniciar sesión', public: true, render: () => <LoginPage /> },
   { re: /^\/registro\/?$/, title: 'Crear cuenta', public: true, render: () => <RegisterPage /> },
+  // Fase 13: recuperar la contraseña (sin sesión) y enlaces de los correos (con o sin sesión).
+  { re: /^\/recuperar\/?$/, title: 'Recuperar contraseña', public: true, render: () => <ForgotPasswordPage /> },
+  { re: /^\/restablecer\/?$/, title: 'Nueva contraseña', open: true, render: ({ query }) => <ResetPasswordPage query={query} /> },
+  { re: /^\/confirmar-correo\/?$/, title: 'Confirmar correo', open: true, render: ({ query }) => <ConfirmEmailPage query={query} /> },
   // Fase 12: documentos legales (públicos) y peticiones, quejas y reclamos.
   { re: /^\/legal\/(terminos|privacidad|cookies|reembolsos)\/?$/, title: 'Información legal', open: true, render: ({ params }) => <LegalPage doc={params[0] as LegalDocKey} /> },
   { re: /^\/pqr\/?$/, title: 'Peticiones, quejas y reclamos', render: () => <PqrPage /> },
@@ -77,8 +82,8 @@ export function App() {
 
   const gated = Boolean(user && consentPending.length);
   React.useEffect(() => {
-    if (match?.r.open) return; // el documento legal pone su propio título
-    if (gated && path !== '/pqr') document.title = 'Antes de seguir · CuentaClara';
+    if (match?.r.open && path.startsWith('/legal/')) return; // el documento legal pone su propio título
+    if (gated && path !== '/pqr' && !match?.r.open) document.title = 'Antes de seguir · CuentaClara';
     else if (match) document.title = `${match.r.title} · CuentaClara`;
   }, [match, gated, path]);
 

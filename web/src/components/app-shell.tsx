@@ -5,6 +5,7 @@ import { useAuthed } from '@/lib/session';
 import { useTheme, type ThemePref } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { LegalFooter } from '@/components/legal';
+import { VerifyEmailBanner } from '@/components/security';
 
 export const NAV = [
   { path: '/dashboard', label: 'Dashboard', short: 'Inicio', icon: LayoutDashboard },
@@ -119,6 +120,7 @@ export function AppShell({ path, children }: { path: string; children: React.Rea
       </aside>
 
       <main id="main" className="mx-auto w-full max-w-[1240px] min-w-0 px-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-5 sm:px-6 md:pb-12 md:pt-7">
+        <VerifyEmailBanner />
         {children}
         <LegalFooter className="mt-12 border-t border-border pt-5" pqr />
       </main>

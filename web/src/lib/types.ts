@@ -1,4 +1,33 @@
-export type User = { id: number; email: string; name: string };
+/** `emailVerified` y `twoFactor`: fase 13 (docs/13-correo-y-segundo-factor.md). */
+export type User = { id: number; email: string; name: string; emailVerified: boolean; twoFactor: boolean };
+
+/** Cómo se entregan los correos: por Brevo, o en «modo local» (el enlace aparece en la ventana negra del servidor). */
+export type MailDelivery = 'brevo' | 'local' | 'prueba';
+
+export type SecurityEventType =
+  | 'correo_confirmado'
+  | 'correo_cambiado'
+  | 'contrasena_cambiada'
+  | 'contrasena_restablecida'
+  | '2fa_activado'
+  | '2fa_desactivado'
+  | '2fa_quitado_admin'
+  | 'codigos_nuevos'
+  | 'codigo_respaldo_usado'
+  | '2fa_bloqueado'
+  | 'sesiones_cerradas_admin';
+
+export type SecurityEvent = { id: number; type: SecurityEventType; label: string; detail: string; ip: string; userAgent: string; at: string };
+
+/** GET /api/account/security */
+export type SecurityInfo = {
+  email: string;
+  emailVerified: boolean;
+  pendingEmail: string | null;
+  delivery: MailDelivery;
+  twoFactor: { enabled: boolean; since: string | null; backupCodesLeft: number };
+  events: SecurityEvent[];
+};
 
 export type VatPeriodicity = 'cuatrimestral' | 'bimestral';
 
@@ -287,7 +316,8 @@ export type ClientRow = {
   activeReminders: number;
 };
 
-export type ClientsData = { email: string; invitations: ClientInvitation[]; clients: ClientRow[] };
+/** `invitationsHidden`: el contador aún no confirma su correo y no ve las invitaciones (fase 13). */
+export type ClientsData = { email: string; invitations: ClientInvitation[]; invitationsHidden?: boolean; clients: ClientRow[] };
 
 /** Datos del cliente que necesita el modo cliente (solo lectura). `id` es el del vínculo. */
 export type ClientProfile = {

@@ -41,7 +41,8 @@ export function useScope(): Scope {
     apiBase: `/clients/${client.id}`,
     path: (p) => (p === 'dashboard' ? base : `${base}/${p}`),
     owner: {
-      user: { id: client.id, name: client.user_name, email: client.email },
+      // emailVerified/twoFactor no se usan en el modo cliente (solo el saludo y los datos del emisor).
+      user: { id: client.id, name: client.user_name, email: client.email, emailVerified: false, twoFactor: false },
       settings: {
         business_name: client.business_name,
         nif: client.nif,

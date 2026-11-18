@@ -20,11 +20,16 @@ import { AccountantCard } from '@/components/accountant';
 import { greetingName } from '@/pages/dashboard';
 import { PASSWORD_HINT, passwordError } from '@/pages/auth';
 import { PrivacyCard } from '@/components/privacy-card';
+import { EmailCard, SecurityActivityCard, TwoFactorCard } from '@/components/security';
+import { useLoad } from '@/lib/use-load';
+import type { SecurityInfo } from '@/lib/types';
 
 export function SettingsPage() {
   const { user, settings, meta, setSettings, signOut } = useAuthed();
   const toast = useToast();
   const { uvt } = meta.tax;
+  // Fase 13: correo, verificación en dos pasos y actividad de seguridad.
+  const security = useLoad(() => api<SecurityInfo>('/account/security'), [user.email, user.emailVerified, user.twoFactor]);
 
   // --- Datos fiscales e impuestos (Colombia)
   const fiscalRef = React.useRef<HTMLFormElement>(null);
@@ -92,7 +97,8 @@ export function SettingsPage() {
     try {
       await api('/account/password', { method: 'PUT', body: { current_password: pw.current_password, new_password: pw.new_password } });
       setPw({ current_password: '', new_password: '', new_password2: '' });
-      toast('Contraseña cambiada');
+      toast('Contraseña cambiada. Te enviamos un aviso a tu correo.');
+      security.reload();
     } catch (err) {
       setPwErrors(errorFields(err));
       setPwError(errorMessage(err));
@@ -221,6 +227,8 @@ export function SettingsPage() {
           <ThemeSwitch className="mt-4 max-w-[220px]" />
         </Card>
 
+        <EmailCard security={security} />
+
         <Card>
           <form ref={pwRef} noValidate onSubmit={changePassword} className="grid gap-4">
             <div>
@@ -246,6 +254,10 @@ export function SettingsPage() {
             </div>
           </form>
         </Card>
+
+        <TwoFactorCard security={security} />
+
+        <SecurityActivityCard security={security} />
 
         <Card>
           <CardTitle>Sesión</CardTitle>

@@ -558,7 +558,7 @@ test('si otra cuenta toma el correo nuevo antes de confirmarlo, el cambio no se 
 
 test('npm run seguridad: estado, quitar la verificación en dos pasos y cerrar sesiones', async () => {
   const u = await withTwoFactor();
-  const run = (...args) => execFileSync(process.execPath, [path.join(ROOT, 'scripts', 'seguridad.js'), `--db=${srv.dbPath}`, ...args], { encoding: 'utf8' });
+  const run = (...args) => execFileSync(process.execPath, [path.join(ROOT, 'scripts', 'seguridad.js'), `--db=${srv.dbPath}`, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   let out = run(`--email=${u.user.email}`);
   assert.match(out, /Correo: confirmado/);
   assert.match(out, /Verificación en dos pasos: activada desde .*10 códigos de respaldo/);
