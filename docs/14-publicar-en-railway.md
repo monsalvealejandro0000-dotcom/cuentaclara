@@ -26,8 +26,9 @@
 | `COBRO_JSON` | Contenido de `data/cobro.json` (ver fase 11) | Cuando quieras cobrar Pro o Contador. Lo pegas tú |
 | `CORREO_JSON` o `BREVO_API_KEY` | Configuración de Brevo (ver fase 13) | Sin esto la app no envía correos: nadie puede confirmar su correo, recuperar la contraseña ni avisar un pago |
 | `BACKUP_DOWNLOAD_TOKEN` | Una clave aleatoria de 43 caracteres (la misma de `data/copia-remota.json`) | Activa la descarga de copias. **La pegas tú**: quien la tenga puede bajar los datos de todas las cuentas |
+| `AVISOS_JSON` | Contenido de `data/avisos.json` en una línea (ver [fase 15](15-avisos.md)) | Avisos al celular cuando alguien crea una cuenta o entra. Lo pegas tú |
 
-`RESPONSABLE_JSON`, `COBRO_JSON` y `CORREO_JSON` los lee [`server/config-env.js`](../server/config-env.js): si la variable existe, manda sobre el archivo. Su contenido nunca se muestra en los registros.
+`RESPONSABLE_JSON`, `COBRO_JSON`, `CORREO_JSON` y `AVISOS_JSON` los lee [`server/config-env.js`](../server/config-env.js): si la variable existe, manda sobre el archivo. Su contenido nunca se muestra en los registros.
 
 ## Comandos del administrador en el servidor
 

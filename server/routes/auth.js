@@ -30,7 +30,7 @@ const challengeExpired = (message = 'La verificación caducó. Vuelve a escribir
 const USER_COLUMNS = 'id, email, name, password_hash, email_verified_at, totp_enabled_at';
 const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
 
-export function registerAuthRoutes(router, { db, limiters, secureCookies, cookieName, legal, now, logger, mail }) {
+export function registerAuthRoutes(router, { db, limiters, secureCookies, cookieName, legal, now, logger, mail, avisos }) {
   const secure = (req) => secureCookies || req.headers['x-forwarded-proto'] === 'https';
   const setSession = (req, res, userId) => {
     const { token } = createSession(db, userId);
@@ -98,6 +98,8 @@ export function registerAuthRoutes(router, { db, limiters, secureCookies, cookie
       // Fase 13: enlace para confirmar el correo. La cuenta se puede usar desde ya (con el aviso «Confirma tu correo»).
       mail.send(user.email, 'verificar', { name: user.name, link: mail.link(TOKEN_ROUTE.verificar, token) });
       setSession(req, res, user.id);
+      // Aviso al administrador (server/avisos.js): solo el número de la cuenta.
+      avisos.cuentaNueva(user);
       return reply(201, { user: publicUser(user), consent: { pending: [] }, delivery: mail.mode() });
     },
     { auth: false },
@@ -142,6 +144,7 @@ export function registerAuthRoutes(router, { db, limiters, secureCookies, cookie
       }
       purgeExpiredSessions(db);
       setSession(req, res, row.id);
+      avisos.entrada(row);
       return { user: publicUser(row), consent: { pending: pendingConsents(db, legal, row) } };
     },
     { auth: false },
@@ -182,6 +185,7 @@ export function registerAuthRoutes(router, { db, limiters, secureCookies, cookie
       }
       purgeExpiredSessions(db);
       setSession(req, res, user.id);
+      avisos.entrada(user);
       return {
         user: publicUser(user),
         consent: { pending: pendingConsents(db, legal, user) },
@@ -201,7 +205,15 @@ export function registerAuthRoutes(router, { db, limiters, secureCookies, cookie
     { auth: false },
   );
 
-  router.get('/api/auth/me', ({ user }) => ({ user: publicUser(user), consent: { pending: pendingConsents(db, legal, user) } }), { consent: false });
+  // La app lo pide al abrirse: con la sesión ya abierta, también cuenta como entrada (un aviso cada 3 horas).
+  router.get(
+    '/api/auth/me',
+    ({ user }) => {
+      avisos.entrada(user);
+      return { user: publicUser(user), consent: { pending: pendingConsents(db, legal, user) } };
+    },
+    { consent: false },
+  );
 
   router.put('/api/account/password', async ({ body, user, req, ip }) => {
     const v = new Validator(body);

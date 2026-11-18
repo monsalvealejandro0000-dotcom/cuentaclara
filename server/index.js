@@ -35,7 +35,7 @@ const allowedHosts = parseAllowedHosts(process.env.ALLOWED_HOSTS) ?? (loopback ?
 if (!allowedHosts) {
   console.warn('[seguridad] Escuchando en una dirección pública sin ALLOWED_HOSTS: define tu dominio (p. ej. ALLOWED_HOSTS=cuentaclara.co).');
 }
-// En hostings sin acceso al disco: responsable.json, cobro.json y correo.json desde variables de entorno.
+// En hostings sin acceso al disco: responsable.json, cobro.json, correo.json y avisos.json desde variables de entorno.
 const fromEnv = writeConfigFromEnv(path.dirname(dbPath));
 if (fromEnv.length) console.log(`Configuración desde variables de entorno: ${fromEnv.join(', ')}`);
 // Enlaces de los correos (fase 13): url_app de data/correo.json, APP_URL o, en local, http://localhost:<puerto>.
@@ -61,6 +61,7 @@ app.server.listen(port, host, () => {
   const token = process.env.BACKUP_DOWNLOAD_TOKEN;
   if (backupTokenDigest(token)) console.log('Descarga de copias (npm run copia-servidor): activada');
   else if (token) console.warn(`[copias] BACKUP_DOWNLOAD_TOKEN es muy corta (mínimo ${MIN_BACKUP_TOKEN_LENGTH} caracteres): la descarga de copias queda desactivada.`);
+  if (app.avisos.activo()) console.log('Avisos de cuentas nuevas y entradas (ntfy): activados');
   if (app.mail.mode() === 'brevo') console.log(`Correo: Brevo. Enlaces con ${app.mail.baseUrl()}`);
   else console.log('Correo: modo local (sin data/correo.json). Los correos NO se envían: su enlace aparece en esta ventana.');
   if (!loopback && app.mail.baseUrl().includes('localhost')) {

@@ -22,7 +22,8 @@
     "pqr": "node scripts/pqr.js",
     "consentimientos": "node scripts/consentimientos.js",
     "seguridad": "node scripts/seguridad.js",
-    "copia-servidor": "node scripts/descargar-copia.js"
+    "copia-servidor": "node scripts/descargar-copia.js",
+    "avisos": "node scripts/avisos.js"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

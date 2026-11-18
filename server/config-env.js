@@ -1,8 +1,8 @@
 /**
  * Archivos de configuración desde variables de entorno, para hostings sin acceso directo al disco (Railway, Render…).
  *
- * RESPONSABLE_JSON, COBRO_JSON y CORREO_JSON: si están definidas, al arrancar se escribe su contenido en
- * responsable.json, cobro.json y correo.json junto a la base de datos. La variable manda sobre el archivo.
+ * RESPONSABLE_JSON, COBRO_JSON, CORREO_JSON y AVISOS_JSON: si están definidas, al arrancar se escribe su contenido en
+ * responsable.json, cobro.json, correo.json y avisos.json junto a la base de datos. La variable manda sobre el archivo.
  * El contenido nunca se muestra en la ventana negra: lleva datos personales y claves.
  */
 import fs from 'node:fs';
@@ -12,6 +12,7 @@ export const CONFIG_ENV = {
   RESPONSABLE_JSON: 'responsable.json',
   COBRO_JSON: 'cobro.json',
   CORREO_JSON: 'correo.json',
+  AVISOS_JSON: 'avisos.json',
 };
 
 /** Escribe en `dir` los archivos cuyas variables existen. Devuelve los nombres escritos. */

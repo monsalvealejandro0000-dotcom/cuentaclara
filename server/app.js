@@ -27,6 +27,7 @@ import { registerPqrRoutes } from './routes/pqr.js';
 import { registerAccountRoutes } from './routes/account.js';
 import { registerBackupRoutes } from './routes/backup.js';
 import { createMailer } from './mail.js';
+import { createAvisos } from './avisos.js';
 import { paymentConfigLoader } from './payments.js';
 import { todayLocal } from './calc.js';
 
@@ -182,6 +183,7 @@ function checkOrigin(req) {
  * `appUrl`: dirección de la app para los enlaces de los correos si correo.json no trae `url_app`.
  * `mailTransport`: solo para las pruebas: recibe cada correo en lugar de enviarlo.
  * `backupToken`: clave para descargar copias de seguridad (GET /api/admin/copia). Sin ella, la descarga no existe.
+ * `avisosConfigPath`: avisos al administrador por ntfy (server/avisos.js); por defecto, avisos.json junto a la base de datos.
  */
 export function createApp({
   dbPath,
@@ -199,6 +201,7 @@ export function createApp({
   appUrl = 'http://localhost:3000',
   mailTransport = null,
   backupToken = null,
+  avisosConfigPath = path.join(path.dirname(path.resolve(dbPath ?? '.')), 'avisos.json'),
 } = {}) {
   if (!dbPath) throw new Error('createApp: dbPath es obligatorio');
   const db = openDb(dbPath);
@@ -225,6 +228,7 @@ export function createApp({
     logger,
     mail,
     backupToken,
+    avisos: createAvisos({ db, configPath: avisosConfigPath, appUrl: mail.baseUrl(), logger, now }),
   };
   for (const register of ROUTE_MODULES) register(router, ctx);
   const root = path.resolve(publicDir);
@@ -359,8 +363,9 @@ export function createApp({
       server.close(() => resolve());
       server.closeAllConnections?.();
     });
+    await ctx.avisos.flush();
     db.close();
   }
 
-  return { server, db, close, mail };
+  return { server, db, close, mail, avisos: ctx.avisos };
 }
